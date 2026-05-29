@@ -35,6 +35,7 @@ public class CategoryController {
     @PutMapping("/public/categories")
     public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
         try {
+            System.out.println("Update got hit");
             categoryService.updateCategory(category);
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (HttpStatusCodeException e) {

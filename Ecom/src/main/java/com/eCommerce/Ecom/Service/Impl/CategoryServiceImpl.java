@@ -1,65 +1,76 @@
 package com.eCommerce.Ecom.Service.Impl;
 
 import com.eCommerce.Ecom.Model.Category;
+import com.eCommerce.Ecom.Repository.CategoryRepository;
 import com.eCommerce.Ecom.Service.I_CategoryService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements I_CategoryService {
 
-    private final List<Category> categoryList = new ArrayList<>();
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
-    long id = 1;
+    private final CategoryRepository categoryRepository;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     /**
-     * @return
+     * Read all the categories
+     *
+     * @return all category list
      */
     @Override
     public List<Category> getAllCategories() {
-        return categoryList;
+        return categoryRepository.findAll();
     }
 
     /**
-     * @param category
+     * Create a new category
+     *
+     * @param category to be created
      */
     @Override
     public void createCategory(Category category) {
-        category.setCategoryId(id++);
-        categoryList.add(category);
+        categoryRepository.save(category);
     }
 
     /**
-     * @param category
+     * Update category
+     *
+     * @param category object to be updated
      */
     @Override
     public void updateCategory(Category category) {
-        categoryList.stream()
-                .filter(ele -> ele.getCategoryId() == category.getCategoryId())
-                .findFirst()
-                .ifPresentOrElse(ele -> {
-                    ele.setCategoryId(category.getCategoryId());
-                    ele.setCategoryName(category.getCategoryName());
-                }, () -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found")
-                );
+        Optional<Category> categoryList = categoryRepository.findById(category.getCategoryId());
+        logger.debug("Category List fetched from db: {}",categoryList);
+        Category category1 = categoryList
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found"));
+        logger.debug("Category : {}", category1);
+        category1.setCategoryId(category.getCategoryId());
+        category1.setCategoryName(category.getCategoryName());
+
+        categoryRepository.save(category1);
     }
 
     /**
-     * @param categoryId
-     * @return
+     * Deletes a category by its ID.
+     *
+     * @param categoryId the ID of the category to be removed
+     * @return a success message containing the deleted ID
      */
     @Override
     public String deleteCategoryById(Long categoryId) {
-        Category category = categoryList.stream()
-                .filter(cat -> cat.getCategoryId() == categoryId)
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, categoryId+" not found"));
-
-        categoryList.remove(category.getCategoryId());
+        categoryRepository.deleteById(categoryId);
         return "Deleted id: " + categoryId + " successfully.";
     }
 }
