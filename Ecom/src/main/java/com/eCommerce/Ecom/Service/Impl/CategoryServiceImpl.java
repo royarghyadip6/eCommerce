@@ -1,5 +1,6 @@
 package com.eCommerce.Ecom.Service.Impl;
 
+import com.eCommerce.Ecom.Exception.APIException;
 import com.eCommerce.Ecom.Exception.ResourceNotFoundException;
 import com.eCommerce.Ecom.Model.Category;
 import com.eCommerce.Ecom.Repository.CategoryRepository;
@@ -32,7 +33,12 @@ public class CategoryServiceImpl implements I_CategoryService {
      */
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+        List<Category> categoryList = categoryRepository.findAll();
+        if (categoryList.isEmpty()) {
+            throw new APIException("Category is not present. Please create a new category.");
+        } else {
+            return categoryList;
+        }
     }
 
     /**
@@ -42,7 +48,14 @@ public class CategoryServiceImpl implements I_CategoryService {
      */
     @Override
     public void createCategory(Category category) {
-        categoryRepository.save(category);
+        Category categoryFromDb = categoryRepository.findByCategoryName(category.getCategoryName());
+        if (categoryFromDb == null) {
+            System.out.println("Category not found. Creating category :"+category.getCategoryName());
+            categoryRepository.save(category);
+        } else {
+            throw new APIException("Category with name "+ categoryFromDb.getCategoryName() +" is already exists.");
+        }
+
     }
 
     /**
