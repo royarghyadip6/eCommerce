@@ -1,5 +1,6 @@
 package com.eCommerce.Ecom.Service.Impl;
 
+import com.eCommerce.Ecom.Exception.ResourceNotFoundException;
 import com.eCommerce.Ecom.Model.Category;
 import com.eCommerce.Ecom.Repository.CategoryRepository;
 import com.eCommerce.Ecom.Service.I_CategoryService;
@@ -54,7 +55,7 @@ public class CategoryServiceImpl implements I_CategoryService {
         Optional<Category> categoryList = categoryRepository.findById(category.getCategoryId());
         logger.debug("Category List fetched from db: {}",categoryList);
         Category category1 = categoryList
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Category Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category","categoryId",category.getCategoryId()));
         logger.debug("Category : {}", category1);
         category1.setCategoryId(category.getCategoryId());
         category1.setCategoryName(category.getCategoryName());
@@ -70,7 +71,10 @@ public class CategoryServiceImpl implements I_CategoryService {
      */
     @Override
     public String deleteCategoryById(Long categoryId) {
-        categoryRepository.deleteById(categoryId);
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException("Category","categoryId",categoryId));
+
+        categoryRepository.deleteById(category.getCategoryId());
         return "Deleted id: " + categoryId + " successfully.";
     }
 }
