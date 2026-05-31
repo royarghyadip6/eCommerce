@@ -6,7 +6,7 @@ import com.eCommerce.Ecom.Model.Category;
 
 public interface I_CategoryService {
 
-    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortDir);
 
     CategoryDTO createCategory(CategoryDTO categoryDTO);
 
