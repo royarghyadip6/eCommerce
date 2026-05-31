@@ -11,6 +11,9 @@ import com.eCommerce.Ecom.Service.I_CategoryService;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +39,11 @@ public class CategoryServiceImpl implements I_CategoryService {
      * @return all category list
      */
     @Override
-    public CategoryResponse getAllCategories() {
-        List<Category> categoryList = categoryRepository.findAll();
+    public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+
+        List<Category> categoryList = categoryPage.getContent();
         if (categoryList.isEmpty()) {
             throw new APIException("Category is not present. Please create a new category.");
         } else {
@@ -47,6 +53,11 @@ public class CategoryServiceImpl implements I_CategoryService {
 
             CategoryResponse categoryResponse = new CategoryResponse();
             categoryResponse.setContent(categoryDTOList);
+            categoryResponse.setPageNumber(categoryPage.getNumber());
+            categoryResponse.setPageSize(categoryPage.getSize());
+            categoryResponse.setTotalElements(categoryPage.getNumberOfElements());
+            categoryResponse.setTotalPages(categoryPage.getTotalPages());
+            categoryResponse.setLastPage(categoryPage.isLast());
 
             return categoryResponse;
         }
