@@ -6,8 +6,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -35,22 +33,13 @@ public class CategoryController {
 
     @PutMapping("/public/categories")
     public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
-        try {
-            System.out.println("Update got hit");
-            categoryService.updateCategory(category);
-            return new ResponseEntity<>(HttpStatus.ACCEPTED);
-        } catch (HttpStatusCodeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-        }
+        categoryService.updateCategory(category);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/admin/categories/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
-        try {
-            String status = categoryService.deleteCategoryById(categoryId);
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(),e.getStatusCode());
-        }
+        String status = categoryService.deleteCategoryById(categoryId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 }
