@@ -1,16 +1,17 @@
 package com.eCommerce.Ecom.Service.Impl;
 
+import com.eCommerce.Ecom.DTO.CategoryDTO;
+import com.eCommerce.Ecom.DTO.CategoryResponse;
 import com.eCommerce.Ecom.Exception.APIException;
 import com.eCommerce.Ecom.Exception.ResourceNotFoundException;
 import com.eCommerce.Ecom.Model.Category;
 import com.eCommerce.Ecom.Repository.CategoryRepository;
 import com.eCommerce.Ecom.Service.I_CategoryService;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +23,11 @@ public class CategoryServiceImpl implements I_CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    private final ModelMapper modelMapper;
+
+    public CategoryServiceImpl(CategoryRepository categoryRepository, ModelMapper modelMapper) {
         this.categoryRepository = categoryRepository;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -32,30 +36,38 @@ public class CategoryServiceImpl implements I_CategoryService {
      * @return all category list
      */
     @Override
-    public List<Category> getAllCategories() {
+    public CategoryResponse getAllCategories() {
         List<Category> categoryList = categoryRepository.findAll();
         if (categoryList.isEmpty()) {
             throw new APIException("Category is not present. Please create a new category.");
         } else {
-            return categoryList;
+            List<CategoryDTO> categoryDTOList = categoryList.stream()
+                    .map(category -> modelMapper.map(category, CategoryDTO.class))
+                    .toList();
+
+            CategoryResponse categoryResponse = new CategoryResponse();
+            categoryResponse.setContent(categoryDTOList);
+
+            return categoryResponse;
         }
     }
 
     /**
      * Create a new category
      *
-     * @param category to be created
+     * @param categoryDTO to be created
      */
     @Override
-    public void createCategory(Category category) {
+    public CategoryDTO createCategory(CategoryDTO categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
         Category categoryFromDb = categoryRepository.findByCategoryName(category.getCategoryName());
-        if (categoryFromDb == null) {
-            System.out.println("Category not found. Creating category :"+category.getCategoryName());
-            categoryRepository.save(category);
-        } else {
+        if (categoryFromDb != null) {
             throw new APIException("Category with name "+ categoryFromDb.getCategoryName() +" is already exists.");
         }
-
+        System.out.println("Category not found. Creating category :"+ category.getCategoryName());
+        Category cat = categoryRepository.save(category);
+        CategoryDTO categoryDTO = modelMapper.map(cat, CategoryDTO.class);
+        return categoryDTO;
     }
 
     /**
@@ -64,7 +76,8 @@ public class CategoryServiceImpl implements I_CategoryService {
      * @param category object to be updated
      */
     @Override
-    public void updateCategory(Category category) {
+    public CategoryDTO updateCategory(CategoryDTO categoryDto) {
+        Category category = modelMapper.map(categoryDto, Category.class);
         Optional<Category> categoryList = categoryRepository.findById(category.getCategoryId());
         logger.debug("Category List fetched from db: {}",categoryList);
         Category category1 = categoryList
@@ -73,7 +86,10 @@ public class CategoryServiceImpl implements I_CategoryService {
         category1.setCategoryId(category.getCategoryId());
         category1.setCategoryName(category.getCategoryName());
 
-        categoryRepository.save(category1);
+        category1 = categoryRepository.save(category1);
+
+        CategoryDTO categoryDTO = modelMapper.map(category1, CategoryDTO.class);
+        return categoryDTO;
     }
 
     /**
@@ -83,11 +99,11 @@ public class CategoryServiceImpl implements I_CategoryService {
      * @return a success message containing the deleted ID
      */
     @Override
-    public String deleteCategoryById(Long categoryId) {
+    public CategoryDTO deleteCategoryById(Long categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Category","categoryId",categoryId));
 
         categoryRepository.deleteById(category.getCategoryId());
-        return "Deleted id: " + categoryId + " successfully.";
+        return modelMapper.map(category, CategoryDTO.class);
     }
 }
