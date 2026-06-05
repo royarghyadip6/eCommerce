@@ -26,7 +26,7 @@ public class Users {
     private String phoneNumber;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "address_address_id", referencedColumnName = "addressId")
+    @JoinColumn(name = "address_id", referencedColumnName = "addressId")
     private Address address;
 
     @CreationTimestamp
