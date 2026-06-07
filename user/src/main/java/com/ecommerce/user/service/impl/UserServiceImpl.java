@@ -40,7 +40,7 @@ public class UserServiceImpl implements I_UserService {
      * @return a UserResponseDTO object representing the retrieved user
      */
     @Override
-    public UserResponseDTO getUserById(Long id) {
+    public UserResponseDTO getUserById(String id) {
         Users user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Data not found with id:"+id));
         return mapToUserResponse(user);
     }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements I_UserService {
      * @return a UserResponseDTO object representing the updated user
      */
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
+    public UserResponseDTO updateUser(String id, UserRequestDTO userRequestDTO) {
         if (userRepository.existsById(id)) {
             Users user = userRequestDTOToUserMapping(userRequestDTO);
             Users savedUser = userRepository.save(user);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements I_UserService {
      * @param id the ID of the user to delete
      */
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         } else {

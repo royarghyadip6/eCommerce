@@ -2,7 +2,7 @@
 # docker compose down     # Stop all container
 services:
   postgres:
-    container_name: postgres-container
+    container_name: local_postgres
     image: postgres:18.4-alpine
     environment:
       POSTGRES_USER: argroy
@@ -17,7 +17,7 @@ services:
       - postgres
     restart: unless-stopped
   pgadmin:
-    container_name: pgadmin_container
+    container_name: pgadmin_ui
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -30,8 +30,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-
-  mongodb:
+  mongo:
     image: mongo:7.0
     container_name: local_mongodb
     environment:
@@ -41,25 +40,32 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-    restart: unless-stopped
-
+    networks:
+      - mongo_network
+    restart: always
   mongo-express:
     image: mongo-express:latest
     container_name: mongo_ui
     environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: 27017
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: "true"
       ME_CONFIG_MONGODB_ADMINUSERNAME: root_admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: root_password
-      ME_CONFIG_MONGODB_SERVER: mongodb # Matches the service name above
       ME_CONFIG_BASICAUTH_USERNAME: web_user
       ME_CONFIG_BASICAUTH_PASSWORD: web_password
     ports:
-      - "8081:8081"
+      - "8090:8081"
     depends_on:
-      - mongodb
-    restart: unless-stopped
+      - mongo
+    networks:
+      - mongo_network
+    restart: always
 
 networks:
   postgres:
+    driver: bridge
+  mongo_network:
     driver: bridge
 
 volumes:

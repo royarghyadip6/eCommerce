@@ -1,19 +1,28 @@
 server:
   port: 8081
+
 spring:
   application:
     name: user
-  datasource:
-    url: jdbc:postgresql://localhost:5432/UserDB
-    username: argroy
-    password: Papai12#
-  jpa:
-    database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-      format-sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    mongodb:
+      uri: mongodb://root_admin:root_password@localhost:27017/UserDB?authSource=admin
+
+logging:
+  level:
+    org.springframework.data.mongodb: DEBUG
+
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/UserDB
+#    username: argroy
+#    password: Papai12#
+#  jpa:
+#    database: POSTGRESQL
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#      format-sql: true
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
 #  h2:
 #    console:
 #      enabled: true
