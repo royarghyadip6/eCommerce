@@ -1,5 +1,3 @@
-# docker compose up -d    # Run All the compose file background
-# docker compose down     # Stop all container
 services:
   postgres:
     container_name: local_postgres
@@ -10,7 +8,8 @@ services:
       PGDATA: /data/postgres
       PGTZ: Asia/Kolkata
     volumes:
-      - postgres:/data/postgres
+      - ./init-scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -40,6 +39,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      - ./init-scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     networks:
       - mongo_network
     restart: always
@@ -69,6 +69,6 @@ networks:
     driver: bridge
 
 volumes:
-  postgres:
+  postgres_data:
   pgadmin:
   mongo_data:
