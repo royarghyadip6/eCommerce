@@ -19,7 +19,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/{userId}/items")
+    @PostMapping("/items")
     public ResponseEntity<CartItemResponseDTO> addItemToCart(
             @RequestHeader("X-User-ID") Long userId,
             @Valid @RequestBody CartItemRequestDTO request) {

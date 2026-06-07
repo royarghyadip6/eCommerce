@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
         if (existingCartItem == null) {
             CartItem newCart = new CartItem();
             newCart.setUserId(userId);
-            newCart.setProductId(10000L);
+            newCart.setProductId(itemRequest.getProductId());
             newCart.setQuantity(itemRequest.getQuantity());
             newCart.setPrice(BigDecimal.valueOf(1000L * itemRequest.getQuantity()));
             existingCartItem = cartItemRepository.save(newCart);

@@ -1,11 +1,14 @@
+# docker compose up -d    # Run All the compose file background
+# docker compose down     # Stop all container
 services:
   postgres:
     container_name: postgres-container
-    image: postgres:18.4
+    image: postgres:18.4-alpine
     environment:
       POSTGRES_USER: argroy
       POSTGRES_PASSWORD: Papai12#
       PGDATA: /data/postgres
+      PGTZ: Asia/Kolkata
     volumes:
       - postgres:/data/postgres
     ports:
