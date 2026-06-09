@@ -5,18 +5,18 @@ import com.ecommerce.user.dto.UserRequestDTO;
 import com.ecommerce.user.dto.UserResponseDTO;
 import com.ecommerce.user.model.Address;
 import com.ecommerce.user.model.Users;
-import com.ecommerce.user.repository.I_UsersReposiroty;
+import com.ecommerce.user.repository.I_UsersRepository;
 import com.ecommerce.user.service.I_UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements I_UserService {
 
-    private final I_UsersReposiroty userRepository;
+    private final I_UsersRepository userRepository;
 
     /**
      * Get all users from the database and convert them to UserResponseDTO objects.

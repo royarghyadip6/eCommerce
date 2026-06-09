@@ -6,11 +6,13 @@ spring:
     name: user
   data:
     mongodb:
-      uri: mongodb://root_admin:root_password@localhost:27017/UserDB?authSource=admin
+#      uri: mongodb://root_admin:root_password@localhost:27017/UserDB?authSource=admin
+      uri: "mongodb+srv://royarghyadip6_db_user:X4RyT8xZKfuxtbaZ@cluster-user.i4fhmeb.mongodb.net/UserDB?appName=Cluster-User&retryWrites=true&w=majority&authSource=admin"
 
 logging:
   level:
-    org.springframework.data.mongodb: DEBUG
+    org.springframework.data.mongodb: INFO
+    org.springframework.data: INFO
 
 #  datasource:
 #    url: jdbc:postgresql://localhost:5432/UserDB
