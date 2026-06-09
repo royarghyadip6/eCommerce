@@ -6,8 +6,8 @@ spring:
   datasource:
 #    url: jdbc:postgresql://localhost:5432/ProductDB
     url: jdbc:postgresql://ep-little-cherry-apzpafux.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: npg_dvBNxs15tzVm
+    username: ${POSTGRES_DB_USER}
+    password: ${POSTGRES_DB_PASS}
   jpa:
     database: POSTGRESQL
     show-sql: true
