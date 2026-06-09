@@ -1,4 +1,5 @@
 services:
+# PostgreSQL Database Service
   postgres:
     container_name: local_postgres
     image: postgres:18.4-alpine
@@ -13,10 +14,12 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - postgres_network
     restart: unless-stopped
+
+# pgAdmin Web Interface Service
   pgadmin:
-    container_name: pgadmin_ui
+    container_name: ui_pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -27,8 +30,10 @@ services:
     ports:
       - "5050:80"
     networks:
-      - postgres
+      - postgres_network
     restart: unless-stopped
+
+# MongoDB Database Service
   mongo:
     image: mongo:7.0
     container_name: local_mongodb
@@ -43,9 +48,11 @@ services:
     networks:
       - mongo_network
     restart: always
+
+# MongoDB Express Web Interface Service
   mongo-express:
     image: mongo-express:latest
-    container_name: mongo_ui
+    container_name: ui_mongo
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_PORT: 27017
@@ -62,13 +69,61 @@ services:
       - mongo_network
     restart: always
 
+# MySQL Database Service
+  mysql_db:
+    image: mysql:8.0
+    container_name: local_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - mysql_network
+
+# phpMyAdmin Web Interface Service
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ui_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql_db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
+    ports:
+      - "8091:80"
+    depends_on:
+      - mysql_db
+    networks:
+      - mysql_network
+
+# Redis Service
+#  redis:
+#    image: redis:7.0
+#    container_name: redis_container
+#    restart: always
+#    ports:
+#      - "6379:6379"
+#    networks:
+#      - redis_network
+
 networks:
-  postgres:
+  postgres_network:
     driver: bridge
   mongo_network:
     driver: bridge
+  mysql_network:
+    driver: bridge
+#  redis_network:
+#    driver: bridge
 
 volumes:
   postgres_data:
   pgadmin:
   mongo_data:
+  mysql_data:
