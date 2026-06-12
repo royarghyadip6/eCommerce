@@ -1,4 +1,4 @@
 build:
   id: 2
-  name: Production Build
-  version: 2.0.1
+  name: Local Production Build
+  version: v2.0

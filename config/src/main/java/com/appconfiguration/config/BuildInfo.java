@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "build")
 public class BuildInfo {
     private String id;
+    private String owner;
     private String name;
     private String version;
 }
