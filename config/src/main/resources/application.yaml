@@ -4,4 +4,9 @@ spring:
   config:
     import: "optional:configserver:http://localhost:8085"
   profiles:
-    active: test
+    active: dev
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
