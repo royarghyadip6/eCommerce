@@ -7,7 +7,7 @@ spring:
   data:
     mongodb:
 #      uri: mongodb://root_admin:root_password@localhost:27017/UserDB?authSource=admin
-      uri: "mongodb+srv://${MONGO_DB_USER}:${MONGO_DB_PASS}@cluster-user.i4fhmeb.mongodb.net/UserDB?appName=Cluster-User&retryWrites=true&w=majority&authSource=admin""
+      uri: "mongodb+srv://${MONGO_DB_USER}:${MONGO_DB_PASS}@cluster-user.i4fhmeb.mongodb.net/UserDB?appName=Cluster-User&retryWrites=true&w=majority&authSource=admin"
 
 logging:
   level:
