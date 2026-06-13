@@ -28,7 +28,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "8100:80"
+      - "10001:80"
     networks:
       - postgres_network
     restart: unless-stopped
@@ -62,7 +62,7 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: web_user
       ME_CONFIG_BASICAUTH_PASSWORD: web_password
     ports:
-      - "8101:8081"
+      - "10002:8081"
     depends_on:
       - mongo
     networks:
@@ -96,43 +96,22 @@ services:
       PMA_PORT: 3306
       PMA_ARBITRARY: 0
     ports:
-      - "8102:80"
+      - "10003:80"
     depends_on:
       - mysql_db
     networks:
       - mysql_network
 
-# Oracle Database Service
-#  oracle_db:
-#    image: container-registry.oracle.com/database/free:latest
-#    container_name: oracle_container
-#    restart: always
-#    environment:
-#      - ORACLE_PWD=YourSecurePassword123
-#      - ORACLE_SID=FREE
-#      - ORACLE_PDB=FREEPDB1
-#    ports:
-#      - "1521:1521"   # DB traffic
-#      - "5500:5500"   # Web UI traffic
-#    volumes:
-#      # USE A CLEAN NAMED VOLUME WRAPPER (Do not include host paths like ./oradata)
-#      - oracle_data:/opt/oracle/oradata
-#      - ./init-scripts/init-oracle.sql:/docker-entrypoint-initdb.d/init-oracle.sql:ro
-#    healthcheck:
-#      test: ["CMD-SHELL", "exec oracle/checkDBStatus.sh"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 3
-
-# Redis Service
-#  redis:
-#    image: redis:7.0
-#    container_name: redis_container
-#    restart: always
-#    ports:
-#      - "6379:6379"
-#    networks:
-#      - redis_network
+# RabbitMQ Service
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_container
+    restart: always
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "10004:15672" # Management UI
+    networks:
+      - rabbitmq_network
 
 networks:
   postgres_network:
@@ -141,13 +120,11 @@ networks:
     driver: bridge
   mysql_network:
     driver: bridge
-#  redis_network:
-#    driver: bridge
+  rabbitmq_network:
+    driver: bridge
 
 volumes:
   postgres_data:
   pgadmin:
   mongo_data:
   mysql_data:
-#  oracle_data:
-#    driver: local  # Let Docker completely manage the internal Linux permissions

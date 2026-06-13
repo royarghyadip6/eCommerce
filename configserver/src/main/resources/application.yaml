@@ -2,18 +2,37 @@ spring:
   application:
     name: configserver
   profiles:
-    active: jdbc
-  datasource:
-    url: jdbc:mysql://localhost:3306/ConfigDB
-    username: root
-    password: rootpassword
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    active: native
   cloud:
     config:
       server:
-        jdbc:
-          sql: "SELECT prop_key, prop_value FROM config_properties WHERE application = ? AND profile = ? AND label =?"
-          default-label: master
+        native:
+          search-locations: file:///C:\Users\argroy\IdeaProjects\eCommerce\configserver\src\main\resources\config
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#  profiles:
+#    active: jdbc
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/ConfigDB
+#    username: root
+#    password: rootpassword
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  cloud:
+#    config:
+#      server:
+#        jdbc:
+#          sql: "SELECT prop_key, prop_value FROM config_properties WHERE application = ? AND profile = ? AND label =?"
+#          default-label: master
 #  cloud:
 #    config:
 #      server:
@@ -30,3 +49,6 @@ logging:
     root: INFO
 #    org.springframework: DEBUG
 #    com.appconfiguration.config: DEBUG
+
+encryption:
+  key: "mysecretkey12345" # Must be 16, 24, or 32 bytes long for AES
