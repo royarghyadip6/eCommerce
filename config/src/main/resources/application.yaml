@@ -10,3 +10,8 @@ management:
     web:
       exposure:
         include: refresh
+#build:
+#  id: ${ID:-unknown}
+#  owner: ${OWNER:-unknown}
+#  name: ${NAME:-unknown}
+#  version: ${VERSION:-unknown}
