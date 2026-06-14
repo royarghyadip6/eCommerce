@@ -1,0 +1,8 @@
+build:
+  id: "JENKINS-JOB-884"
+  owner: "automation-ci"
+  name: "ecommerce-user-service-test"
+  version: "1.0.0-RC1"
+  buildTime: "04:11:02"
+  buildDate: "2026-06-13"
+  buildStatus: "STABLE"

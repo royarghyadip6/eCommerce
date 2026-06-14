@@ -1,0 +1,8 @@
+build:
+  id: "default-id"
+  owner: "default-owner"
+  name: "default-name"
+  version: "default-version"
+  buildTime: "00:00:00"
+  buildDate: "2026-01-01"
+  buildStatus: "UNKNOWN"

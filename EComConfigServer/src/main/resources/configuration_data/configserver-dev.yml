@@ -1,0 +1,8 @@
+build:
+  id: "BUILD-DEV-0412"
+  owner: "developer-team-local"
+  name: "ecommerce-user-service-dev"
+  version: "1.0.0-SNAPSHOT"
+  buildTime: "14:22:15"
+  buildDate: "2026-06-14"
+  buildStatus: "SUCCESS"

@@ -1,0 +1,8 @@
+build:
+  id: "RELEASE-2026-V1"
+  owner: "release-operations-manager"
+  name: "ecommerce-user-service-prod"
+  version: "1.0.0-RELEASE"
+  buildTime: "09:00:00"
+  buildDate: "2026-06-10"
+  buildStatus: "ACTIVE"
