@@ -1,0 +1,13 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: user
+  data:
+    mongodb:
+      uri: "mongodb+srv://${MONGO_DB_USER}:${MONGO_DB_PASS}@cluster-user.d8r67gq.mongodb.net/?appName=Cluster-User&retryWrites=true&w=majority&authSource=admin"
+
+logging:
+  level:
+    org.springframework.data.mongodb: INFO
+    org.springframework.data: INFO

@@ -1,43 +1,5 @@
-server:
-  port: 8081
-
 spring:
   application:
     name: user
-  data:
-    mongodb:
-#      uri: mongodb://root_admin:root_password@localhost:27017/UserDB?authSource=admin
-      uri: "mongodb+srv://${MONGO_DB_USER}:${MONGO_DB_PASS}@cluster-user.i4fhmeb.mongodb.net/UserDB?appName=Cluster-User&retryWrites=true&w=majority&authSource=admin"
-
-logging:
-  level:
-    org.springframework.data.mongodb: INFO
-    org.springframework.data: INFO
-
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/UserDB
-#    username: argroy
-#    password: Papai12#
-#  jpa:
-#    database: POSTGRESQL
-#    show-sql: true
-#    hibernate:
-#      ddl-auto: update
-#      format-sql: true
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#  datasource:
-#    url: jdbc:h2:mem:userdb
-#    driverClassName: org.h2.Driver
-#    username: sa
-#    password: password
-#    platform: h2
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    hibernate:
-#      ddl-auto: drop-and-create
-#    show-sql: true
-#    format-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8085"
